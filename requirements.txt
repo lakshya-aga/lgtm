@@ -1,0 +1,7 @@
+pydantic>=2.10
+pytest>=8.0
+openai>=2.40
+openai-agents[litellm]>=0.17
+litellm>=1.88
+exa_py>=2.13
+python-dotenv>=1.0

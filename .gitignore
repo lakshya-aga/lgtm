@@ -1,0 +1,8 @@
+# secrets & local state
+.env
+.brain/
+
+# python
+__pycache__/
+*.pyc
+.pytest_cache/
