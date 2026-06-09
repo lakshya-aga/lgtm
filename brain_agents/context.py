@@ -46,10 +46,32 @@ class WebSearchService:
 
 
 class SlackService:
-    """STUB for Slack alerts + interactive approvals."""
+    """Slack Web API client (chat.postMessage).
+
+    Real when SLACK_BOT_TOKEN (xoxb-...) is set; otherwise returns a clearly-marked
+    placeholder so the graph still runs offline.
+    """
+
+    API = "https://slack.com/api/chat.postMessage"
+
+    def __init__(self) -> None:
+        self._token = os.environ.get("SLACK_BOT_TOKEN")
 
     def post(self, channel: str, text: str) -> str:
-        return f"(stub) posted to #{channel}: {text[:60]}"
+        if not self._token:
+            return f"(no SLACK_BOT_TOKEN) would post to #{channel}: {text[:80]}"
+        import requests
+
+        resp = requests.post(
+            self.API,
+            headers={"Authorization": f"Bearer {self._token}"},
+            json={"channel": channel, "text": text},
+            timeout=10,
+        )
+        data = resp.json()
+        if not data.get("ok"):
+            return f"Slack error posting to #{channel}: {data.get('error')}"
+        return f"posted to #{channel} (ts {data.get('ts')})"
 
 
 class NotionService:
